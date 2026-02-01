@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎉</title>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to top, #ffd6e8, #ffffff);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  h1 {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(32px, 8vw, 60px);
+    color: #ff2f92;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
+
+  p {
+    position: absolute;
+    top: 45%;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(16px, 4vw, 22px);
+    color: #444;
+    pointer-events: none;
+  }
+
+  button {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 26px;
+    font-size: 16px;
+    background: #ff2f92;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  button:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>🎉 Happy Birthday! 🎂</h1>
+<p>Wishing you joy, laughter & cake 🍰</p>
+
+<button id="playBtn">▶ Play Birthday Song 🎵</button>
+
+<canvas id="canvas"></canvas>
+
+<audio id="song" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c1c75f7a2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  const song = document.getElementById("song");
+  const playBtn = document.getElementById("playBtn");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let balloons = [];
+
+  function createBalloons() {
+    balloons = [];
+    const count = Math.floor(canvas.width / 25);
+    for (let i = 0; i < count; i++) {
+      balloons.push({
+        x: Math.random() * canvas.width,
+        y: canvas.height + Math.random() * canvas.height,
+        r: 12 + Math.random() * 10,
+        color: `hsl(${Math.random() * 360},70%,60%)`,
+        speed: 0.8 + Math.random() * 1.5
+      });
+    }
+  }
+  createBalloons();
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    balloons.forEach(b => {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = b.color;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(b.x, b.y + b.r);
+      ctx.lineTo(b.x, b.y + b.r + 25);
+      ctx.strokeStyle = "#999";
+      ctx.stroke();
+
+      b.y -= b.speed;
+      if (b.y < -50) {
+        b.y = canvas.height + 50;
+        b.x = Math.random() * canvas.width;
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // 🎵 THIS ALWAYS WORKS
+  playBtn.addEventListener("click", () => {
+    song.play();
+    playBtn.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
+
